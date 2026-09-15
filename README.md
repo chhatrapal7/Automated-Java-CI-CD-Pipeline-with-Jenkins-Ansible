@@ -10,40 +10,11 @@ Instead of manually copying and deploying the WAR file on each server, Jenkins a
 
 ---
 
-## Architecture
+## Diagram
+![Diagram](diagram/CI-CD-Java-Application-with-Ansible.png)
 
-```text
-Developer
-    |
-    | Push Code
-    v
-GitHub Repository
-    |
-    v
-Jenkins + Ansible
-    |
-    +----> Build & Test
-    |
-    +----> SonarQube
-    |
-    +----> WAR Artifact
-    |
-    v
-Amazon S3
-    |
-    v
-Ansible Deployment
-    |
-    +--------------------+
-    |                    |
-    v                    v
-Tomcat Worker 1      Tomcat Worker 2
-    |                    |
-    +---------+----------+
-              |
-              v
-       Updated Web Application
-```
+
+
 
 ## Before Trigger Menu Home
 ![Home1](screenshot/Old-Home-Menu.png)
@@ -64,31 +35,6 @@ Tomcat Worker 1      Tomcat Worker 2
 
 ---
 
-## CI/CD Flow
-
-The complete automation flow is:
-
-```text
-GitHub
-   ↓
-Checkout
-   ↓
-Maven Build
-   ↓
-Maven Test
-   ↓
-WAR Package
-   ↓
-SonarQube Code Analysis
-   ↓
-Upload WAR to Amazon S3
-   ↓
-Jenkins triggers Ansible
-   ↓
-Deploy WAR to Tomcat Worker 1 & Worker 2
-   ↓
-Application Updated
-```
 
 ### How it works
 
@@ -160,38 +106,6 @@ Application Updated
 | Apache Tomcat | Application Server                    |
 | AWS EC2       | Infrastructure                        |
 | Linux         | Server Operating System               |
-
----
-
-# Automation Demonstration
-
-To demonstrate the automation, I changed the **web application code/UI** in the GitHub repository.
-
-After the code change:
-
-```text
-Code Change
-    ↓
-GitHub
-    ↓
-Jenkins Pipeline
-    ↓
-Build & Test
-    ↓
-SonarQube Analysis
-    ↓
-New WAR
-    ↓
-Amazon S3
-    ↓
-Ansible Deployment
-    ↓
-Tomcat Worker 1 + Worker 2
-    ↓
-Updated Web Application
-```
-
-The updated application was successfully deployed to both Tomcat worker nodes without manually copying the WAR file or deploying the application on each server.
 
 ---
 
