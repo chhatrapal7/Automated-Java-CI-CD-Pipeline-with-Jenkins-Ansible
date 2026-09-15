@@ -58,7 +58,7 @@ Tomcat Worker 1      Tomcat Worker 2
 
 
 ## Ofter Trigger Menu Home Changed
-![Home](screenshot/New-Home-Menu.png)
+![Home](screenshot/New-Home1-Menu.png)
 
 
 
