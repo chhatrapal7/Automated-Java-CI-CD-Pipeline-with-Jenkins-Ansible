@@ -113,21 +113,21 @@ Purpose:
 
 Make sure the required ports are allowed.
 
-## Jenkins + Ansible EC2
+### Jenkins + Ansible EC2
 
 ```text
 22   SSH
 8080 Jenkins
 ```
 
-## SonarQube EC2
+### SonarQube EC2
 
 ```text
 22   SSH
 9000 SonarQube
 ```
 
-## Tomcat Worker Nodes
+### Tomcat Worker Nodes
 
 ```text
 22   SSH
@@ -163,7 +163,7 @@ The generated artifact is a:
 ```text
 myapp.war
 ```
-# 5. Step 1 - Configure Jenkins + Ansible Master Server
+# 5. Configure Ansible Master Server + Jenkins
 
 We will use the **same EC2 instance** for Jenkins and Ansible.
 
@@ -186,53 +186,9 @@ Update the system:
 ```bash
 dnf update -y
 ```
-
 ---
 
-# 6. Install Jenkins
-
-Import Jenkins repository/key and install Jenkins according to the current Jenkins installation instructions for Amazon Linux.
-
-```bash
-vi jenkins.sh
-```
-```bash
-#STEP-1: Installing Git and Maven
-yum install git maven -y
-
-#STEP-2: Repo Information (jenkins.io --> download -- > redhat)
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-
-#STEP-3: Download Java 21 and Jenkins
-sudo yum install java-21-amazon-corretto -y
-yum install jenkins -y
-sudo mount -o remount,size=2G /tmp
-#STEP-4: Start and check the JENKINS Status
-systemctl start jenkins.service
-systemctl status jenkins.service
-
-#STEP-5: Auto-Start Jenkins
-chkconfig jenkins on
-```
-
-Jenkins normally runs on:
-
-```text
-http://<JENKINS-PUBLIC-IP>:8080
-```
-
-Get the initial administrator password:
-
-```bash
-cat /var/lib/jenkins/secrets/initialAdminPassword
-```
-
-Open Jenkins in the browser and complete the initial setup.
-
----
-
-# 7. configure Ansible
+# 6. configure Ansible
 
 We can configure hostnames for identification.
 
@@ -265,7 +221,7 @@ hostname
 
 ---
 
-# Configure Root Password
+# 7. Configure Root Password
 
 For the lab setup, configure the root password.
 
@@ -286,7 +242,7 @@ Retype new password: ********
 
 ---
 
-# Enable Root SSH Login
+# 8. Enable Root SSH Login
 
 On the servers where root SSH access is required:
 
@@ -319,7 +275,7 @@ systemctl status sshd
 
 ---
 
-# 8. Check Private IP Addresses
+### Check Private IP Addresses
 
 Run:
 
@@ -339,7 +295,7 @@ Do not use the public IP in the Ansible inventory when the servers communicate i
 
 ---
 
-# Generate SSH Key on Ansible Master
+### Generate SSH Key on Ansible Master
 
 Login to EC2-1.
 
@@ -361,7 +317,7 @@ The key will normally be created under:
 
 ---
 
-# Copy SSH Key to Tomcat Nodes
+### Copy SSH Key to Tomcat Nodes
 
 From the Ansible Master:
 
@@ -391,7 +347,7 @@ Enter the root password when prompted.
 
 ---
 
-# Test SSH Connection
+### Test SSH Connection
 
 From the Ansible Master:
 
@@ -431,7 +387,7 @@ Ansible Master
 
 ---
 
-# Configure Ansible Inventory
+### Configure Ansible Inventory
 
 Create/open:
 
@@ -459,7 +415,7 @@ tomcat2 ansible_host=172.31.21.25
 
 ---
 
-# Test Ansible
+## Test Ansible
 
 Run:
 
@@ -493,7 +449,55 @@ At this point the Ansible Master and both worker nodes are connected.
 
 ---
 
-# 10. Step 2 - Configure Jenkins Basic CI Pipeline
+
+# 9. Install Jenkins
+
+Import Jenkins repository/key and install Jenkins according to the current Jenkins installation instructions for Amazon Linux.
+
+```bash
+vi jenkins.sh
+```
+```bash
+#STEP-1: Installing Git and Maven
+yum install git maven -y
+
+#STEP-2: Repo Information (jenkins.io --> download -- > redhat)
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+#STEP-3: Download Java 21 and Jenkins
+sudo yum install java-21-amazon-corretto -y
+yum install jenkins -y
+sudo mount -o remount,size=2G /tmp
+#STEP-4: Start and check the JENKINS Status
+systemctl start jenkins.service
+systemctl status jenkins.service
+
+#STEP-5: Auto-Start Jenkins
+chkconfig jenkins on
+```
+
+Run 
+```text
+sh jenkins.sh
+```
+
+Jenkins normally runs on:
+
+```text
+http://<JENKINS-PUBLIC-IP>:8080
+```
+
+Get the initial administrator password:
+
+```bash
+cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+Open Jenkins in the browser and complete the initial setup.
+
+
+# 10.  Configure Jenkins Basic CI Pipeline
 
 Before integrating SonarQube, S3 and Ansible deployment, first verify that Jenkins can successfully:
 
@@ -519,7 +523,7 @@ Create a Pipeline script.
 
 ---
 
-# Basic Jenkins Pipeline
+## Basic Jenkins Pipeline
 
 Use this pipeline first:
 
@@ -616,7 +620,7 @@ target/myapp.war
 
 ---
 
-# Verify WAR Artifact
+## Verify WAR Artifact
 
 On Jenkins:
 
@@ -892,7 +896,7 @@ which ansible
 
 ---
 
-# Jenkins Ansible Credentials
+## Jenkins Ansible Credentials
 
 Go to:
 
@@ -1833,7 +1837,7 @@ Use:
 
 ---
 
-# Important deploy.yml Path
+## Important deploy.yml Path
 
 This line:
 
@@ -1865,7 +1869,7 @@ If your Jenkins job has another name, update the path accordingly.
 
 ---
 
-# 63. Run Manual Deployment
+# 38. Run Manual Deployment
 
 Run:
 
@@ -1897,7 +1901,7 @@ Ansible Master
 
 ---
 
-# 38. Why Manual Deployment Is Not Enough
+# 39. Why Manual Deployment Is Not Enough
 
 The manual process requires:
 
@@ -1917,7 +1921,7 @@ Therefore, we integrate Ansible with Jenkins.
 
 ---
 
-# 38. Step 6 - Integrate Ansible with Jenkins
+# 40. Step 6 - Integrate Ansible with Jenkins
 
 Move the deployment playbook to:
 
@@ -2030,7 +2034,7 @@ pipeline {
 
 ---
 
-# 39. Final Pipeline Explained Stage by Stage
+# 41. Final Pipeline Explained Stage by Stage
 
 ## Stage 1 - Checkout
 
@@ -2178,7 +2182,7 @@ Tomcat 1         Tomcat 2
 ```
 
 ---
-# 40. Credentials and Password Reference
+# 42. Credentials and Password Reference
 
 This section is important because several different credentials are used in the project.
 
@@ -2274,7 +2278,7 @@ The Jenkinsfile contains:
 ```groovy
 profileName: 's3creds'
 ```
-# 41. Jenkinsfile
+# 43. Jenkinsfile
 
 The final Jenkins pipeline should be stored in the root of the GitHub repository as:
 
@@ -2299,7 +2303,7 @@ Jenkinsfile.groovy
 
 ---
 
-# 42. Configure Jenkins Pipeline From SCM
+# 44. Configure Jenkins Pipeline From SCM
 
 Instead of copying the pipeline manually every time, configure Jenkins to read the `Jenkinsfile` from GitHub.
 
@@ -2348,7 +2352,7 @@ Now Jenkins automatically reads the pipeline from GitHub.
 
 ---
 
-# 43. What Happens When Code Changes?
+# 45. What Happens When Code Changes?
 
 Suppose the developer changes:
 
@@ -2394,7 +2398,7 @@ Therefore both worker nodes receive the new application version.
 
 ---
 
-# 44. Troubleshooting Checklist
+# 46. Troubleshooting Checklist
 
 ## Jenkins is not starting
 
@@ -2575,7 +2579,7 @@ tail -f /root/tomcat/logs/catalina.out
 
 ---
 
-# 45. Final Architecture Summary
+# 47. Final Architecture Summary
 
 The final architecture contains four EC2 instances:
 
