@@ -45,15 +45,19 @@ Tomcat Worker 1      Tomcat Worker 2
        Updated Web Application
 ```
 
-**Original Webpage**
+## Before Trigger Menu Home
 ![Home1](screenshot/Old-Home-Menu.png)
 
 
-**Jenkins Trigger**
-![CI-CD Pipline](./screenshot/Stages.png)
 
 
-**Dual Worker Node Deployment**:
+## Jenkins Trigger Stages
+![CI-CD Pipline](screenshot/Stages.png)
+
+
+
+
+## Ofter Trigger Menu Home Changed
 ![Home](screenshot/New-Home-Menu.png)
 
 
