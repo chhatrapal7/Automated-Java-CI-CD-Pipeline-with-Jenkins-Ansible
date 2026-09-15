@@ -46,14 +46,16 @@ Tomcat Worker 1      Tomcat Worker 2
 ```
 
 **Original Webpage**
-![Home1](screenshot/Screenshot 2026-09-09 002532.png)
+![Home1](screenshot/Screenshot2026-09-09002532.png)
 
+![AWS Architecture](./diagram/Aws-Zero-Downtime-Deployment.png)
 
 **Jenkins Trigger**
-![CI-CD Pipline](screenshot/Screenshot 2026-09-09 002117.png)
+![CI-CD Pipline](./screenshot/Screenshot2026-09-09002117.png)
 
 
 **Dual Worker Node Deployment**:
+
 ![Home](screenshot/Screenshot2026-09-09003515.png)
 
 
